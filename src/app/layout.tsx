@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "투자 케이스스터디",
+  title: "Case Study",
   description: "투자 사례 분석 모음",
 };
 
@@ -32,7 +32,7 @@ export default function RootLayout({
         <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-zinc-200">
           <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
             <Link href="/" className="text-lg font-bold tracking-tight text-zinc-900">
-              케이스스터디
+              Case Study
             </Link>
             <nav className="flex gap-6 text-sm text-zinc-500">
               <Link href="/" className="hover:text-zinc-900 transition-colors">
@@ -43,7 +43,7 @@ export default function RootLayout({
         </header>
         <main className="flex-1">{children}</main>
         <footer className="border-t border-zinc-200 py-8 text-center text-sm text-zinc-400">
-          투자 케이스스터디 &copy; 2026
+          Case Study &copy; 2026
         </footer>
       </body>
     </html>
