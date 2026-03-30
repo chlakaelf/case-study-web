@@ -6,24 +6,50 @@ import { categories, caseStudies } from "@/data/case-studies";
 
 export default function Home() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [search, setSearch] = useState("");
 
-  const filtered =
-    activeCategory === "all"
-      ? caseStudies
-      : caseStudies.filter((cs) =>
-          cs.tags.includes(activeCategory as (typeof categories)[number])
-        );
+  const filtered = caseStudies.filter((cs) => {
+    const matchesCategory =
+      activeCategory === "all" ||
+      cs.tags.includes(activeCategory as (typeof categories)[number]);
+
+    const q = search.trim().toLowerCase();
+    const matchesSearch =
+      !q ||
+      cs.title.toLowerCase().includes(q) ||
+      cs.subtitle.toLowerCase().includes(q) ||
+      cs.summary.toLowerCase().includes(q) ||
+      cs.tags.some((tag) => tag.toLowerCase().includes(q));
+
+    return matchesCategory && matchesSearch;
+  });
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-12">
-      <section className="mb-12">
-        <h1 className="text-3xl font-bold tracking-tight text-zinc-900 mb-3">
-          Case Study
-        </h1>
-        <p className="text-zinc-500 text-lg">
-          기업이 아닌 사례 중심으로 정리한 투자 분석 모음
-        </p>
-      </section>
+      <div className="mb-8">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="제목, 내용 검색..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full px-4 py-3 pl-10 rounded-xl border border-zinc-200 bg-white text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-300 focus:border-zinc-300 transition-all"
+          />
+          <svg
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+        </div>
+      </div>
 
       <div className="flex flex-wrap gap-2 mb-8">
         <button
@@ -82,7 +108,7 @@ export default function Home() {
 
       {filtered.length === 0 && (
         <p className="text-center text-zinc-400 py-12">
-          해당 카테고리에 케이스가 없습니다.
+          검색 결과가 없습니다.
         </p>
       )}
     </div>
