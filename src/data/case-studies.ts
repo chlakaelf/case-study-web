@@ -5,12 +5,9 @@
 
 // 카테고리 목록 — 원하는 대로 추가/삭제/순서 변경 가능
 export const categories = [
-  "구글트렌드",
+  "트렌드",
   "소비재",
-  "D2C",
-  "사이클",
-  "매크로",
-  "밸류에이션",
+  "DECK"
 ] as const;
 
 export type Category = (typeof categories)[number];
@@ -30,7 +27,7 @@ export const caseStudies: CaseStudy[] = [
     slug: "hoka-google-trends",
     title: "소비재 실적 · 구글트렌드의 시사",
     subtitle: "HOKA One One을 중심으로",
-    tags: ["구글트렌드", "소비재", "D2C"],
+    tags: ["트렌드", "소비재", "DECK"],
     summary:
       "구글트렌드와 소비재 실적 간 시차와 주가 고점-주가 구매 패턴 분석. 트렌드-실적 간 고점의 딜레이는 약 3분기, 소비자들의 오프라인으로 접하고 구매 패턴 파급.",
     date: "2026-03",

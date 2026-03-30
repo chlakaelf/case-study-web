@@ -12,7 +12,7 @@ export default function HokaCaseStudy() {
 
       <header className="mb-10">
         <div className="flex items-center gap-2 mb-4">
-          {["구글트렌드", "소비재", "D2C"].map((tag) => (
+          {["트렌드", "소비재", "DECK"].map((tag) => (
             <span
               key={tag}
               className="inline-block px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-600 text-xs font-medium"
