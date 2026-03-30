@@ -25,12 +25,12 @@ export interface CaseStudy {
 export const caseStudies: CaseStudy[] = [
   {
     slug: "hoka-google-trends",
-    title: "소비재 실적 · 구글트렌드의 시사",
+    title: "DECK: 소비재 실적과 구글 트렌드의 시계열",
     subtitle: "HOKA One One을 중심으로",
     tags: ["트렌드", "소비재", "DECK"],
     summary:
-      "구글트렌드와 소비재 실적 간 시차와 주가 고점-주가 구매 패턴 분석. 트렌드-실적 간 고점의 딜레이는 약 3분기, 소비자들의 오프라인으로 접하고 구매 패턴 파급.",
-    date: "2026-03",
+      "구글트렌드 고점에서 실적·주가 고점까지 약 3~5분기 시차 존재. HOKA 케이스를 통해 소비재의 트렌드-실적 디커플링 구간을 분석.",
+    date: "21.4Q ~ 25.1Q",
   },
   // 새 케이스 추가 예시:
   // {
