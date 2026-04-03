@@ -26,6 +26,8 @@ export interface ArticleContent {
   title: string;
   subtitle: string;
   tags: string[];
+  summary?: string;
+  date?: string;
   charts?: Record<string, ChartMeta>;
   sections: Section[];
 }
@@ -220,7 +222,7 @@ export function EditableArticle({ content: initialContent, slug, chartSlots }: P
       </Link>
 
       <header className="mb-10">
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 mb-4 flex-wrap">
           {content.tags.map((tag) => (
             <span
               key={tag}
@@ -229,6 +231,20 @@ export function EditableArticle({ content: initialContent, slug, chartSlots }: P
               {tag}
             </span>
           ))}
+          {isAdmin && (
+            <input
+              type="text"
+              value={content.tags.join(", ")}
+              onChange={(e) => {
+                const newTags = e.target.value.split(",").map((t) => t.trim()).filter(Boolean);
+                hasChanges.current = true;
+                setSaveStatus("idle");
+                setContent((prev) => ({ ...prev, tags: newTags }));
+              }}
+              className="ml-2 px-2 py-0.5 text-xs border border-blue-200 rounded focus:outline-none focus:ring-2 focus:ring-blue-300 w-48"
+              placeholder="태그 (쉼표 구분)"
+            />
+          )}
         </div>
         <h1 className="text-2xl font-bold tracking-tight text-zinc-900 mb-2">
           <span {...plainEditableProps("title", content.title)} />

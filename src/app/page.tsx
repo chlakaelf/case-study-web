@@ -25,7 +25,7 @@ export default function Home() {
   const filtered = caseStudies.filter((cs) => {
     const matchesCategory =
       activeCategory === "all" ||
-      cs.tags.includes(activeCategory as (typeof categories)[number]);
+      cs.tags.includes(activeCategory);
     return matchesCategory;
   });
 
