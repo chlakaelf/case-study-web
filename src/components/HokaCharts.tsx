@@ -14,29 +14,32 @@ import {
   Area,
 } from "recharts";
 
-// HOKA quarterly total revenue (Deckers 10-K/10-Q, $M)
+// HOKA quarterly revenue (Deckers 10-K/10-Q, $M)
+// Total & Wholesale from Fiscal.ai; D2C = Total - Wholesale
 // Deckers FY ends March 31. Calendar quarter labels used.
 const revenueData = [
-  { quarter: "20.2Q", revenue: 109.0, yoy: null },
-  { quarter: "20.3Q", revenue: 143.1, yoy: null },
-  { quarter: "20.4Q", revenue: 141.6, yoy: null },
-  { quarter: "21.1Q", revenue: 177.5, yoy: null },
-  { quarter: "21.2Q", revenue: 213.1, yoy: 95.5 },
-  { quarter: "21.3Q", revenue: 210.4, yoy: 47.0 },
-  { quarter: "21.4Q", revenue: 184.6, yoy: 30.4 },
-  { quarter: "22.1Q", revenue: 283.5, yoy: 59.7 },
-  { quarter: "22.2Q", revenue: 330.0, yoy: 54.9 },
-  { quarter: "22.3Q", revenue: 333.0, yoy: 58.3 },
-  { quarter: "22.4Q", revenue: 352.1, yoy: 90.7 },
-  { quarter: "23.1Q", revenue: 397.7, yoy: 40.3 },
-  { quarter: "23.2Q", revenue: 420.5, yoy: 27.4 },
-  { quarter: "23.3Q", revenue: 424.0, yoy: 27.3 },
-  { quarter: "23.4Q", revenue: 429.3, yoy: 21.9 },
-  { quarter: "24.1Q", revenue: 533.0, yoy: 34.0 },
-  { quarter: "24.2Q", revenue: 545.2, yoy: 29.7 },
-  { quarter: "24.3Q", revenue: 570.9, yoy: 34.6 },
-  { quarter: "24.4Q", revenue: 530.9, yoy: 23.7 },
-  { quarter: "25.1Q", revenue: 586.1, yoy: 10.0 },
+  // Pre-split data (wholesale/D2C not available from chart)
+  { quarter: "20.2Q", wholesale: null, d2c: null, total: 109, wholesaleYoy: null, d2cYoy: null, totalYoy: null },
+  { quarter: "20.3Q", wholesale: null, d2c: null, total: 143, wholesaleYoy: null, d2cYoy: null, totalYoy: null },
+  { quarter: "20.4Q", wholesale: null, d2c: null, total: 142, wholesaleYoy: null, d2cYoy: null, totalYoy: null },
+  { quarter: "21.1Q", wholesale: null, d2c: null, total: 178, wholesaleYoy: null, d2cYoy: null, totalYoy: null },
+  { quarter: "21.2Q", wholesale: null, d2c: null, total: 213, wholesaleYoy: null, d2cYoy: null, totalYoy: 95 },
+  { quarter: "21.3Q", wholesale: null, d2c: null, total: 210, wholesaleYoy: null, d2cYoy: null, totalYoy: 47 },
+  // Split data available (from Fiscal.ai chart)
+  { quarter: "21.4Q", wholesale: 123, d2c: 62, total: null, wholesaleYoy: null, d2cYoy: null, totalYoy: 30 },
+  { quarter: "22.1Q", wholesale: 208, d2c: 75, total: null, wholesaleYoy: null, d2cYoy: null, totalYoy: 59 },
+  { quarter: "22.2Q", wholesale: 232, d2c: 98, total: null, wholesaleYoy: null, d2cYoy: null, totalYoy: 55 },
+  { quarter: "22.3Q", wholesale: 223, d2c: 110, total: null, wholesaleYoy: null, d2cYoy: null, totalYoy: 59 },
+  { quarter: "22.4Q", wholesale: 224, d2c: 128, total: null, wholesaleYoy: 82, d2cYoy: 106, totalYoy: 90 },
+  { quarter: "23.1Q", wholesale: 247, d2c: 151, total: null, wholesaleYoy: 19, d2cYoy: 101, totalYoy: 41 },
+  { quarter: "23.2Q", wholesale: 261, d2c: 159, total: null, wholesaleYoy: 13, d2cYoy: 62, totalYoy: 27 },
+  { quarter: "23.3Q", wholesale: 263, d2c: 161, total: null, wholesaleYoy: 18, d2cYoy: 46, totalYoy: 27 },
+  { quarter: "23.4Q", wholesale: 252, d2c: 177, total: null, wholesaleYoy: 13, d2cYoy: 38, totalYoy: 22 },
+  { quarter: "24.1Q", wholesale: 350, d2c: 183, total: null, wholesaleYoy: 42, d2cYoy: 21, totalYoy: 34 },
+  { quarter: "24.2Q", wholesale: 333, d2c: 212, total: null, wholesaleYoy: 28, d2cYoy: 33, totalYoy: 30 },
+  { quarter: "24.3Q", wholesale: 362, d2c: 209, total: null, wholesaleYoy: 38, d2cYoy: 30, totalYoy: 35 },
+  { quarter: "24.4Q", wholesale: 305, d2c: 226, total: null, wholesaleYoy: 21, d2cYoy: 28, totalYoy: 24 },
+  { quarter: "25.1Q", wholesale: 397, d2c: 189, total: null, wholesaleYoy: 13, d2cYoy: 3, totalYoy: 10 },
 ];
 
 // DECK monthly stock price (post-split adjusted) + Google Trends ("Hoka", US, monthly)
@@ -117,10 +120,10 @@ export function HokaRevenueChart() {
   return (
     <div className="my-8">
       <h3 className="text-base font-semibold text-zinc-800 mb-1">
-        HOKA Quarterly Revenue ($M)
+        HOKA Wholesale · D2C Revenue ($M)
       </h3>
       <p className="text-xs text-zinc-400 mb-4">
-        Deckers Outdoor 분기별 HOKA 브랜드 총 매출 및 YoY 성장률
+        Deckers Outdoor 분기별 HOKA 브랜드 매출 (Wholesale / D2C 채널별)
       </p>
       <div className="bg-white rounded-xl border border-zinc-200 p-4">
         <ResponsiveContainer width="100%" height={400}>
@@ -158,7 +161,7 @@ export function HokaRevenueChart() {
               tickLine={false}
               axisLine={false}
               tickFormatter={(v: number) => `${v}%`}
-              domain={[0, 100]}
+              domain={[0, 120]}
               label={{
                 value: "YoY %",
                 angle: 90,
@@ -174,6 +177,7 @@ export function HokaRevenueChart() {
                 border: "1px solid #e5e7eb",
               }}
               formatter={(value, name) => {
+                if (value === null || value === undefined) return ["-", String(name)];
                 if (String(name).includes("YoY"))
                   return [`${value}%`, String(name)];
                 return [`$${value}M`, String(name)];
@@ -182,19 +186,55 @@ export function HokaRevenueChart() {
             <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
             <Bar
               yAxisId="left"
-              dataKey="revenue"
-              fill="#1e3a5f"
-              name="HOKA Revenue"
-              radius={[3, 3, 0, 0]}
+              dataKey="wholesale"
+              fill="#f97316"
+              name="Wholesale"
+              stackId="revenue"
+              radius={[0, 0, 0, 0]}
+            />
+            <Bar
+              yAxisId="left"
+              dataKey="d2c"
+              fill="#6fb8af"
+              name="D2C"
+              stackId="revenue"
+              radius={[2, 2, 0, 0]}
+            />
+            <Bar
+              yAxisId="left"
+              dataKey="total"
+              fill="#94a3b8"
+              name="Total (split N/A)"
+              radius={[2, 2, 0, 0]}
             />
             <Line
               yAxisId="right"
-              dataKey="yoy"
-              stroke="#f97316"
-              name="Revenue YoY"
+              dataKey="totalYoy"
+              stroke="#ef4444"
+              name="Total YoY"
               strokeWidth={2}
               dot={{ r: 2.5 }}
               connectNulls
+            />
+            <Line
+              yAxisId="right"
+              dataKey="wholesaleYoy"
+              stroke="#ea580c"
+              name="Wholesale YoY"
+              strokeWidth={2}
+              dot={{ r: 2.5 }}
+              connectNulls
+              strokeDasharray="5 3"
+            />
+            <Line
+              yAxisId="right"
+              dataKey="d2cYoy"
+              stroke="#14b8a6"
+              name="D2C YoY"
+              strokeWidth={2}
+              dot={{ r: 2.5 }}
+              connectNulls
+              strokeDasharray="5 3"
             />
           </ComposedChart>
         </ResponsiveContainer>
