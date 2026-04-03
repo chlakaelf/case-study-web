@@ -176,9 +176,6 @@ export default function Home() {
               {cs.title}
             </h2>
             <p className="text-sm text-zinc-500 mb-3">{cs.subtitle}</p>
-            <p className="text-zinc-600 text-sm leading-relaxed line-clamp-3">
-              {cs.summary}
-            </p>
             <div className="mt-4 text-xs text-zinc-400">{cs.date}</div>
           </Link>
         ))}
