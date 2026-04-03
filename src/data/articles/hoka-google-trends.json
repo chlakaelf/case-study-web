@@ -6,6 +6,16 @@
     "소비재",
     "DECK"
   ],
+  "charts": {
+    "stockTrend": {
+      "title": "DECK 주가 · 구글트렌드 · HOKA 매출 YoY",
+      "subtitle": "구글트렌드 YoY 성장 둔화(23.2Q~) → 주가 고점(24.12): 약 5분기 시차"
+    },
+    "revenue": {
+      "title": "HOKA Wholesale · D2C Revenue ($M)",
+      "subtitle": "Deckers Outdoor 분기별 HOKA 브랜드 매출 (Wholesale / D2C 채널별)"
+    }
+  },
   "sections": [
     {
       "id": "intro",

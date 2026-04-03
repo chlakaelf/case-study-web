@@ -3,6 +3,12 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useAdmin } from "./AdminProvider";
+import { StockTrendChart, HokaRevenueChart } from "./HokaCharts";
+
+const CHART_COMPONENTS: Record<string, React.ComponentType<{ title?: string; subtitle?: string }>> = {
+  stockTrend: StockTrendChart,
+  revenue: HokaRevenueChart,
+};
 
 interface Section {
   id: string;
@@ -11,17 +17,23 @@ interface Section {
   content: string[] | { label: string; text: string }[];
 }
 
+export interface ChartMeta {
+  title: string;
+  subtitle: string;
+}
+
 export interface ArticleContent {
   title: string;
   subtitle: string;
   tags: string[];
+  charts?: Record<string, ChartMeta>;
   sections: Section[];
 }
 
 interface Props {
   content: ArticleContent;
   slug: string;
-  chartSlots: { afterSectionIndex: number; element: React.ReactNode }[];
+  chartSlots: { afterSectionIndex: number; chartKey: string; component: string }[];
 }
 
 const FONT_SIZES = ["12px", "13px", "14px", "15px", "16px", "18px", "20px", "24px"];
@@ -186,7 +198,15 @@ export function EditableArticle({ content: initialContent, slug, chartSlots }: P
         }
       : { children: currentValue };
 
-  const chartMap = new Map(chartSlots.map((s) => [s.afterSectionIndex, s.element]));
+  const chartMap = new Map(chartSlots.map((s) => {
+    const meta = content.charts?.[s.chartKey];
+    return [s.afterSectionIndex, {
+      chartKey: s.chartKey,
+      component: s.component,
+      title: meta?.title || "",
+      subtitle: meta?.subtitle || "",
+    }];
+  }));
 
   return (
     <article className="max-w-3xl mx-auto px-6 py-12">
@@ -265,7 +285,34 @@ export function EditableArticle({ content: initialContent, slug, chartSlots }: P
               </div>
             </section>
 
-            {chartMap.get(si)}
+            {chartMap.has(si) && (() => {
+              const c = chartMap.get(si)!;
+              const ChartComp = CHART_COMPONENTS[c.component];
+              if (!ChartComp) return null;
+              return (
+                <div>
+                  {isAdmin && (
+                    <div className="mt-4 mb-2 space-y-1">
+                      <input
+                        type="text"
+                        value={c.title}
+                        onChange={(e) => updateField(`charts.${c.chartKey}.title`, e.target.value)}
+                        className="w-full px-2 py-1 text-base font-semibold text-zinc-800 border border-blue-200 rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
+                        placeholder="Chart title"
+                      />
+                      <input
+                        type="text"
+                        value={c.subtitle}
+                        onChange={(e) => updateField(`charts.${c.chartKey}.subtitle`, e.target.value)}
+                        className="w-full px-2 py-1 text-xs text-zinc-400 border border-blue-200 rounded focus:outline-none focus:ring-2 focus:ring-blue-300"
+                        placeholder="Chart subtitle"
+                      />
+                    </div>
+                  )}
+                  <ChartComp title={c.title} subtitle={c.subtitle} />
+                </div>
+              );
+            })()}
           </div>
         ))}
       </div>
