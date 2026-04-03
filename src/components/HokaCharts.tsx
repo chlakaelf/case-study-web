@@ -14,6 +14,24 @@ import {
   Area,
 } from "recharts";
 
+import weeklyRaw from "@/data/stock-trend-weekly.json";
+
+interface WeeklyRow {
+  week: string;
+  gt: number;
+  stock: number | null;
+  nq: number | null;
+  ry: number | null;
+}
+
+const stockTrendData = (weeklyRaw as WeeklyRow[]).map((r) => ({
+  week: r.week,
+  googleTrend: r.gt,
+  stock: r.stock,
+  nasdaq: r.nq,
+  revenueYoy: r.ry,
+}));
+
 // HOKA quarterly revenue (Deckers 10-K/10-Q + Fiscal.ai, $M)
 // Wholesale from Fiscal.ai; D2C = Total - Wholesale
 const revenueData = [
@@ -39,78 +57,7 @@ const revenueData = [
   { quarter: "25.1Q", wholesale: 397, d2c: 189, wholesaleYoy: 13, d2cYoy: 3 },
 ];
 
-// DECK monthly stock (post-split adj.) + Google Trends + NASDAQ/100 + HOKA revenue YoY
-const stockTrendData = [
-  // 2020
-  { month: "20.01", stock: 29, googleTrend: 17, nasdaq: 93, revenueYoy: null },
-  { month: "20.02", stock: 32, googleTrend: 19, nasdaq: 94, revenueYoy: null },
-  { month: "20.03", stock: 23, googleTrend: 16, nasdaq: 79, revenueYoy: null },
-  { month: "20.04", stock: 23, googleTrend: 17, nasdaq: 86, revenueYoy: null },
-  { month: "20.05", stock: 27, googleTrend: 22, nasdaq: 92, revenueYoy: null },
-  { month: "20.06", stock: 33, googleTrend: 23, nasdaq: 99, revenueYoy: null },
-  { month: "20.07", stock: 34, googleTrend: 22, nasdaq: 104, revenueYoy: null },
-  { month: "20.08", stock: 35, googleTrend: 22, nasdaq: 111, revenueYoy: null },
-  { month: "20.09", stock: 35, googleTrend: 20, nasdaq: 110, revenueYoy: null },
-  { month: "20.10", stock: 42, googleTrend: 19, nasdaq: 113, revenueYoy: null },
-  { month: "20.11", stock: 43, googleTrend: 21, nasdaq: 117, revenueYoy: null },
-  { month: "20.12", stock: 48, googleTrend: 20, nasdaq: 125, revenueYoy: null },
-  // 2021
-  { month: "21.01", stock: 52, googleTrend: 23, nasdaq: 133, revenueYoy: null },
-  { month: "21.02", stock: 53, googleTrend: 22, nasdaq: 135, revenueYoy: null },
-  { month: "21.03", stock: 54, googleTrend: 31, nasdaq: 132, revenueYoy: null },
-  { month: "21.04", stock: 57, googleTrend: 32, nasdaq: 138, revenueYoy: null },
-  { month: "21.05", stock: 56, googleTrend: 32, nasdaq: 136, revenueYoy: null },
-  { month: "21.06", stock: 57, googleTrend: 34, nasdaq: 141, revenueYoy: 96 },
-  { month: "21.07", stock: 65, googleTrend: 37, nasdaq: 147, revenueYoy: null },
-  { month: "21.08", stock: 72, googleTrend: 36, nasdaq: 150, revenueYoy: null },
-  { month: "21.09", stock: 67, googleTrend: 36, nasdaq: 149, revenueYoy: 47 },
-  { month: "21.10", stock: 61, googleTrend: 34, nasdaq: 150, revenueYoy: null },
-  { month: "21.11", stock: 70, googleTrend: 43, nasdaq: 157, revenueYoy: null },
-  { month: "21.12", stock: 62, googleTrend: 38, nasdaq: 155, revenueYoy: 30 },
-  // 2022
-  { month: "22.01", stock: 55, googleTrend: 39, nasdaq: 146, revenueYoy: null },
-  { month: "22.02", stock: 51, googleTrend: 44, nasdaq: 140, revenueYoy: null },
-  { month: "22.03", stock: 45, googleTrend: 54, nasdaq: 138, revenueYoy: 60 },
-  { month: "22.04", stock: 46, googleTrend: 52, nasdaq: 130, revenueYoy: null },
-  { month: "22.05", stock: 42, googleTrend: 56, nasdaq: 121, revenueYoy: null },
-  { month: "22.06", stock: 44, googleTrend: 62, nasdaq: 114, revenueYoy: 55 },
-  { month: "22.07", stock: 46, googleTrend: 67, nasdaq: 118, revenueYoy: null },
-  { month: "22.08", stock: 54, googleTrend: 71, nasdaq: 125, revenueYoy: null },
-  { month: "22.09", stock: 56, googleTrend: 57, nasdaq: 115, revenueYoy: 58 },
-  { month: "22.10", stock: 58, googleTrend: 54, nasdaq: 110, revenueYoy: null },
-  { month: "22.11", stock: 60, googleTrend: 65, nasdaq: 111, revenueYoy: null },
-  { month: "22.12", stock: 64, googleTrend: 61, nasdaq: 109, revenueYoy: 91 },
-  // 2023
-  { month: "23.01", stock: 69, googleTrend: 66, nasdaq: 111, revenueYoy: null },
-  { month: "23.02", stock: 69, googleTrend: 75, nasdaq: 119, revenueYoy: null },
-  { month: "23.03", stock: 72, googleTrend: 80, nasdaq: 120, revenueYoy: 40 },
-  { month: "23.04", stock: 78, googleTrend: 89, nasdaq: 121, revenueYoy: null },
-  { month: "23.05", stock: 79, googleTrend: 91, nasdaq: 127, revenueYoy: null },
-  { month: "23.06", stock: 83, googleTrend: 95, nasdaq: 135, revenueYoy: 27 },
-  { month: "23.07", stock: 90, googleTrend: 99, nasdaq: 140, revenueYoy: null },
-  { month: "23.08", stock: 91, googleTrend: 94, nasdaq: 137, revenueYoy: null },
-  { month: "23.09", stock: 87, googleTrend: 79, nasdaq: 134, revenueYoy: 27 },
-  { month: "23.10", stock: 86, googleTrend: 70, nasdaq: 131, revenueYoy: null },
-  { month: "23.11", stock: 105, googleTrend: 97, nasdaq: 139, revenueYoy: null },
-  { month: "23.12", stock: 116, googleTrend: 87, nasdaq: 146, revenueYoy: 22 },
-  // 2024
-  { month: "24.01", stock: 120, googleTrend: 74, nasdaq: 149, revenueYoy: null },
-  { month: "24.02", stock: 143, googleTrend: 85, nasdaq: 158, revenueYoy: null },
-  { month: "24.03", stock: 154, googleTrend: 96, nasdaq: 163, revenueYoy: 34 },
-  { month: "24.04", stock: 140, googleTrend: 89, nasdaq: 160, revenueYoy: null },
-  { month: "24.05", stock: 151, googleTrend: 100, nasdaq: 168, revenueYoy: null },
-  { month: "24.06", stock: 169, googleTrend: 97, nasdaq: 176, revenueYoy: 30 },
-  { month: "24.07", stock: 151, googleTrend: 95, nasdaq: 179, revenueYoy: null },
-  { month: "24.08", stock: 154, googleTrend: 96, nasdaq: 177, revenueYoy: null },
-  { month: "24.09", stock: 155, googleTrend: 80, nasdaq: 179, revenueYoy: 35 },
-  { month: "24.10", stock: 161, googleTrend: 71, nasdaq: 185, revenueYoy: null },
-  { month: "24.11", stock: 178, googleTrend: 97, nasdaq: 190, revenueYoy: null },
-  { month: "24.12", stock: 204, googleTrend: 88, nasdaq: 195, revenueYoy: 24 },
-  // 2025
-  { month: "25.01", stock: 210, googleTrend: 73, nasdaq: 197, revenueYoy: null },
-  { month: "25.02", stock: 155, googleTrend: 70, nasdaq: 194, revenueYoy: null },
-  { month: "25.03", stock: 122, googleTrend: 86, nasdaq: 179, revenueYoy: 10 },
-];
+// stockTrendData imported from JSON (274 weekly data points)
 
 export function HokaRevenueChart() {
   return (
@@ -226,8 +173,7 @@ export function StockTrendChart() {
         DECK 주가 · 구글트렌드 · HOKA 매출 YoY
       </h3>
       <p className="text-xs text-zinc-400 mb-4">
-        구글트렌드 YoY 성장 둔화(23.2Q~) → 주가 고점(24.12): 약 5분기 시차.
-        회색 = NASDAQ (÷100)
+        구글트렌드 YoY 성장 둔화(23.2Q~) → 주가 고점(24.12): 약 5분기 시차
       </p>
       <div className="bg-white rounded-xl border border-zinc-200 p-4">
         <ResponsiveContainer width="100%" height={420}>
@@ -237,13 +183,14 @@ export function StockTrendChart() {
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis
-              dataKey="month"
+              dataKey="week"
               tick={{ fontSize: 9, fill: "#999" }}
               tickLine={false}
-              interval={2}
+              interval={12}
               angle={-45}
               textAnchor="end"
               height={55}
+              tickFormatter={(v: string) => v.slice(2, 7)}
             />
             <YAxis
               yAxisId="left"
@@ -331,7 +278,7 @@ export function StockTrendChart() {
             />
             <ReferenceLine
               yAxisId="left"
-              x="23.07"
+              x="2023-07-16"
               stroke="#3b82f6"
               strokeDasharray="3 3"
               label={{
@@ -343,7 +290,7 @@ export function StockTrendChart() {
             />
             <ReferenceLine
               yAxisId="left"
-              x="24.12"
+              x="2024-12-22"
               stroke="#ef4444"
               strokeDasharray="3 3"
               label={{

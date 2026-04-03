@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useAdmin } from "./AdminProvider";
 
@@ -24,12 +24,97 @@ interface Props {
   chartSlots: { afterSectionIndex: number; element: React.ReactNode }[];
 }
 
+const FONT_SIZES = ["12px", "13px", "14px", "15px", "16px", "18px", "20px", "24px"];
+const COLORS = [
+  { label: "Default", value: "" },
+  { label: "Black", value: "#171717" },
+  { label: "Gray", value: "#71717a" },
+  { label: "Red", value: "#dc2626" },
+  { label: "Blue", value: "#2563eb" },
+  { label: "Green", value: "#16a34a" },
+  { label: "Orange", value: "#ea580c" },
+];
+
+function RichTextToolbar() {
+  const exec = (cmd: string, value?: string) => {
+    document.execCommand(cmd, false, value);
+  };
+
+  return (
+    <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-white border border-zinc-200 rounded-xl shadow-lg px-3 py-2 flex items-center gap-1 flex-wrap">
+      <button
+        onMouseDown={(e) => { e.preventDefault(); exec("bold"); }}
+        className="px-2 py-1 text-sm font-bold rounded hover:bg-zinc-100"
+        title="Bold"
+      >
+        B
+      </button>
+      <button
+        onMouseDown={(e) => { e.preventDefault(); exec("italic"); }}
+        className="px-2 py-1 text-sm italic rounded hover:bg-zinc-100"
+        title="Italic"
+      >
+        I
+      </button>
+      <button
+        onMouseDown={(e) => { e.preventDefault(); exec("underline"); }}
+        className="px-2 py-1 text-sm underline rounded hover:bg-zinc-100"
+        title="Underline"
+      >
+        U
+      </button>
+      <div className="w-px h-5 bg-zinc-200 mx-1" />
+      <select
+        onChange={(e) => { exec("fontSize", "1"); requestAnimationFrame(() => { const els = document.querySelectorAll('font[size="1"]'); els.forEach((el) => { (el as HTMLElement).removeAttribute("size"); (el as HTMLElement).style.fontSize = e.target.value; }); }); }}
+        className="text-xs border border-zinc-200 rounded px-1 py-1 bg-white"
+        defaultValue=""
+        title="Font Size"
+      >
+        <option value="" disabled>Size</option>
+        {FONT_SIZES.map((s) => (
+          <option key={s} value={s}>{s}</option>
+        ))}
+      </select>
+      <div className="w-px h-5 bg-zinc-200 mx-1" />
+      {COLORS.map((c) => (
+        <button
+          key={c.value || "default"}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            if (c.value) {
+              exec("foreColor", c.value);
+            } else {
+              exec("removeFormat");
+            }
+          }}
+          className="w-5 h-5 rounded-full border border-zinc-300 hover:scale-110 transition-transform"
+          style={{ backgroundColor: c.value || "#fff" }}
+          title={c.label}
+        />
+      ))}
+      <div className="w-px h-5 bg-zinc-200 mx-1" />
+      <button
+        onMouseDown={(e) => { e.preventDefault(); exec("removeFormat"); }}
+        className="px-2 py-1 text-xs rounded hover:bg-zinc-100 text-zinc-500"
+        title="Clear Formatting"
+      >
+        Clear
+      </button>
+    </div>
+  );
+}
+
 export function EditableArticle({ content: initialContent, slug, chartSlots }: Props) {
   const { isAdmin, password } = useAdmin();
   const [content, setContent] = useState<ArticleContent>(initialContent);
   const [saving, setSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saved" | "error">("idle");
   const hasChanges = useRef(false);
+
+  // Reset content when entering/leaving admin mode
+  useEffect(() => {
+    if (!isAdmin) setContent(initialContent);
+  }, [isAdmin, initialContent]);
 
   const updateField = useCallback((path: string, value: string) => {
     hasChanges.current = true;
@@ -67,7 +152,25 @@ export function EditableArticle({ content: initialContent, slug, chartSlots }: P
     setSaving(false);
   };
 
-  const editableProps = (path: string, currentValue: string) =>
+  const richEditableProps = (path: string, currentValue: string) =>
+    isAdmin
+      ? {
+          contentEditable: true,
+          suppressContentEditableWarning: true,
+          dangerouslySetInnerHTML: { __html: currentValue },
+          onBlur: (e: React.FocusEvent<HTMLElement>) => {
+            const newVal = e.currentTarget.innerHTML;
+            if (newVal !== currentValue) {
+              updateField(path, newVal);
+            }
+          },
+          className: "outline-none ring-1 ring-blue-200 rounded px-1 -mx-1 focus:ring-blue-400 min-h-[1.5em]",
+        }
+      : {
+          dangerouslySetInnerHTML: { __html: currentValue },
+        };
+
+  const plainEditableProps = (path: string, currentValue: string) =>
     isAdmin
       ? {
           contentEditable: true,
@@ -79,13 +182,16 @@ export function EditableArticle({ content: initialContent, slug, chartSlots }: P
             }
           },
           className: "outline-none ring-1 ring-blue-200 rounded px-1 -mx-1 focus:ring-blue-400",
+          children: currentValue,
         }
-      : {};
+      : { children: currentValue };
 
   const chartMap = new Map(chartSlots.map((s) => [s.afterSectionIndex, s.element]));
 
   return (
     <article className="max-w-3xl mx-auto px-6 py-12">
+      {isAdmin && <RichTextToolbar />}
+
       <Link
         href="/"
         className="inline-flex items-center gap-1 text-sm text-zinc-400 hover:text-zinc-600 transition-colors mb-8"
@@ -105,10 +211,10 @@ export function EditableArticle({ content: initialContent, slug, chartSlots }: P
           ))}
         </div>
         <h1 className="text-2xl font-bold tracking-tight text-zinc-900 mb-2">
-          <span {...editableProps("title", content.title)}>{content.title}</span>
+          <span {...plainEditableProps("title", content.title)} />
         </h1>
         <p className="text-base text-zinc-500">
-          <span {...editableProps("subtitle", content.subtitle)}>{content.subtitle}</span>
+          <span {...plainEditableProps("subtitle", content.subtitle)} />
         </p>
       </header>
 
@@ -118,20 +224,14 @@ export function EditableArticle({ content: initialContent, slug, chartSlots }: P
             <section>
               {section.title && (
                 <h2 className="text-lg font-semibold text-zinc-900 mb-3 pb-2 border-b border-zinc-200">
-                  <span {...editableProps(`sections.${si}.title`, section.title)}>
-                    {section.title}
-                  </span>
+                  <span {...plainEditableProps(`sections.${si}.title`, section.title)} />
                 </h2>
               )}
               <div className="text-zinc-700 text-[15px] leading-relaxed space-y-3">
                 {section.type === "paragraphs" &&
                   (section.content as string[]).map((p, pi) => (
                     <p key={pi}>
-                      {isAdmin ? (
-                        <span {...editableProps(`sections.${si}.content.${pi}`, p)}>{p}</span>
-                      ) : (
-                        <span dangerouslySetInnerHTML={{ __html: p }} />
-                      )}
+                      <span {...richEditableProps(`sections.${si}.content.${pi}`, p)} />
                     </p>
                   ))}
 
@@ -140,14 +240,10 @@ export function EditableArticle({ content: initialContent, slug, chartSlots }: P
                     {(section.content as { label: string; text: string }[]).map((item, ii) => (
                       <div key={ii}>
                         <p className="font-medium text-zinc-800 mb-1">
-                          <span {...editableProps(`sections.${si}.content.${ii}.label`, item.label)}>
-                            {item.label}
-                          </span>
+                          <span {...plainEditableProps(`sections.${si}.content.${ii}.label`, item.label)} />
                         </p>
                         <p>
-                          <span {...editableProps(`sections.${si}.content.${ii}.text`, item.text)}>
-                            {item.text}
-                          </span>
+                          <span {...richEditableProps(`sections.${si}.content.${ii}.text`, item.text)} />
                         </p>
                       </div>
                     ))}
@@ -161,7 +257,7 @@ export function EditableArticle({ content: initialContent, slug, chartSlots }: P
                         key={bi}
                         className={bi === (section.content as string[]).length - 1 ? "text-zinc-500 text-sm" : ""}
                       >
-                        <span {...editableProps(`sections.${si}.content.${bi}`, b)}>{b}</span>
+                        <span {...richEditableProps(`sections.${si}.content.${bi}`, b)} />
                       </li>
                     ))}
                   </ul>
