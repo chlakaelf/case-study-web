@@ -1,6 +1,6 @@
 {
   "title": "Hoka/ 소비재 실적과 구글트렌드 사이의 시차",
-  "subtitle": "트렌드-실적 간 고점의 텀은 약 3분기. 소비자들이 오프라인에서 접하고 구매하는 시점이 실적의 고점이다.",
+  "subtitle": "트렌드-실적 간 약 4-5분기 시차, 소비자들의 오프라인 Wholesale 구매 시점이 실적의 고점",
   "tags": [
     "트렌드",
     "소비재",
@@ -9,7 +9,7 @@
   "charts": {
     "stockTrend": {
       "title": "DECK 주가 · 구글트렌드 · HOKA 매출 YoY",
-      "subtitle": "구글트렌드 YoY 성장 둔화(23.2Q~) → 주가 고점(24.12): 약 5분기 시차"
+      "subtitle": "월별 구글트렌드 YoY 성장 둔화(23.3Q~) → 주가 고점(24.3Q): 약 4-5분기 시차"
     },
     "revenue": {
       "title": "HOKA Wholesale · D2C Revenue ($M)",
