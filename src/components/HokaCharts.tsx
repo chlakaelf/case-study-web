@@ -119,9 +119,9 @@ export function HokaRevenueChart({ title, subtitle }: ChartProps) {
       <p className="text-xs text-zinc-400 mb-4">
         {subtitle || "Deckers Outdoor 분기별 HOKA 브랜드 매출 (Wholesale / D2C 채널별)"}
       </p>
-      <div className="bg-white rounded-xl border border-zinc-200 p-4 overflow-x-auto">
-        <div style={{ minWidth: 700 }}>
-          <ResponsiveContainer width="100%" height={400}>
+      <div className="bg-white rounded-xl border border-zinc-200 p-4">
+        <div className="w-full aspect-[16/9]">
+          <ResponsiveContainer width="100%" height="100%">
             <ComposedChart
               data={revenueData}
               margin={{ top: 10, right: 50, left: 10, bottom: 30 }}
@@ -228,9 +228,9 @@ export function StockTrendChart({ title, subtitle }: ChartProps) {
       <p className="text-xs text-zinc-400 mb-4">
         {subtitle || "구글트렌드 YoY 성장 둔화(23.2Q~) → 주가 고점(24.12): 약 5분기 시차"}
       </p>
-      <div className="bg-white rounded-xl border border-zinc-200 p-4 overflow-x-auto">
-        <div style={{ minWidth: 700 }}>
-          <ResponsiveContainer width="100%" height={420}>
+      <div className="bg-white rounded-xl border border-zinc-200 p-4">
+        <div className="w-full aspect-[16/9]">
+          <ResponsiveContainer width="100%" height="100%">
             <ComposedChart
               data={stockTrendData}
               margin={{ top: 20, right: 50, left: 10, bottom: 30 }}
