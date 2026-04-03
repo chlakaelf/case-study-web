@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
+import { AdminProvider } from "@/components/AdminProvider";
+import { AdminLoginButton } from "@/components/AdminLoginButton";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -41,7 +43,10 @@ export default function RootLayout({
             </nav>
           </div>
         </header>
-        <main className="flex-1">{children}</main>
+        <AdminProvider>
+          <AdminLoginButton />
+          <main className="flex-1">{children}</main>
+        </AdminProvider>
         <footer className="border-t border-zinc-200 py-8 text-center text-sm text-zinc-400">
           Case Study &copy; 2026
         </footer>
