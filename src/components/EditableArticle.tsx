@@ -4,10 +4,13 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { useAdmin } from "./AdminProvider";
 import { StockTrendChart, HokaRevenueChart } from "./HokaCharts";
+import { PQDecompositionChart, StockRevenueChart } from "./ImpinjCharts";
 
 const CHART_COMPONENTS: Record<string, React.ComponentType<{ title?: string; subtitle?: string }>> = {
   stockTrend: StockTrendChart,
   revenue: HokaRevenueChart,
+  pqDecomposition: PQDecompositionChart,
+  stockRevenue: StockRevenueChart,
 };
 
 interface Section {
