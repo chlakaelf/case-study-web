@@ -31,7 +31,7 @@ export default function HokaCaseStudy() {
         </p>
       </header>
 
-      <div className="space-y-10">
+      <div className="space-y-16">
         {/* ─── 도입부 ─── */}
         <Section title="구글트렌드와 소비재 실적 간 시간차의 원인">
           <p>

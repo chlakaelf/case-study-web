@@ -14,75 +14,70 @@ import {
   Area,
 } from "recharts";
 
-// HOKA quarterly revenue data (Deckers fiscal year ends March 31)
-// Calendar quarter labels used for readability
+// HOKA quarterly total revenue (Deckers 10-K/10-Q, $M)
+// Deckers FY ends March 31. Calendar quarter labels used.
 const revenueData = [
-  // FY2021 (Apr 2020 - Mar 2021)
-  { quarter: "20.2Q", wholesale: 76, d2c: 33, wholesaleYoy: null, d2cYoy: null },
-  { quarter: "20.3Q", wholesale: 100, d2c: 43, wholesaleYoy: null, d2cYoy: null },
-  { quarter: "20.4Q", wholesale: 92, d2c: 50, wholesaleYoy: null, d2cYoy: null },
-  { quarter: "21.1Q", wholesale: 120, d2c: 58, wholesaleYoy: null, d2cYoy: null },
-  // FY2022 (Apr 2021 - Mar 2022)
-  { quarter: "21.2Q", wholesale: 145, d2c: 68, wholesaleYoy: 91, d2cYoy: 106 },
-  { quarter: "21.3Q", wholesale: 138, d2c: 72, wholesaleYoy: 38, d2cYoy: 67 },
-  { quarter: "21.4Q", wholesale: 114, d2c: 71, wholesaleYoy: 24, d2cYoy: 42 },
-  { quarter: "22.1Q", wholesale: 185, d2c: 99, wholesaleYoy: 54, d2cYoy: 71 },
-  // FY2023 (Apr 2022 - Mar 2023)
-  { quarter: "22.2Q", wholesale: 215, d2c: 115, wholesaleYoy: 48, d2cYoy: 69 },
-  { quarter: "22.3Q", wholesale: 207, d2c: 126, wholesaleYoy: 50, d2cYoy: 75 },
-  { quarter: "22.4Q", wholesale: 207, d2c: 145, wholesaleYoy: 82, d2cYoy: 104 },
-  { quarter: "23.1Q", wholesale: 237, d2c: 161, wholesaleYoy: 28, d2cYoy: 63 },
-  // FY2024 (Apr 2023 - Mar 2024)
-  { quarter: "23.2Q", wholesale: 258, d2c: 163, wholesaleYoy: 20, d2cYoy: 42 },
-  { quarter: "23.3Q", wholesale: 258, d2c: 166, wholesaleYoy: 25, d2cYoy: 32 },
-  { quarter: "23.4Q", wholesale: 253, d2c: 176, wholesaleYoy: 22, d2cYoy: 21 },
-  { quarter: "24.1Q", wholesale: 326, d2c: 207, wholesaleYoy: 38, d2cYoy: 29 },
-  // FY2025 (Apr 2024 - Mar 2025)
-  { quarter: "24.2Q", wholesale: 339, d2c: 206, wholesaleYoy: 31, d2cYoy: 26 },
-  { quarter: "24.3Q", wholesale: 353, d2c: 218, wholesaleYoy: 37, d2cYoy: 31 },
-  { quarter: "24.4Q", wholesale: 325, d2c: 206, wholesaleYoy: 28, d2cYoy: 17 },
-  { quarter: "25.1Q", wholesale: 370, d2c: 216, wholesaleYoy: 13, d2cYoy: 4 },
+  { quarter: "20.2Q", revenue: 109.0, yoy: null },
+  { quarter: "20.3Q", revenue: 143.1, yoy: null },
+  { quarter: "20.4Q", revenue: 141.6, yoy: null },
+  { quarter: "21.1Q", revenue: 177.5, yoy: null },
+  { quarter: "21.2Q", revenue: 213.1, yoy: 95.5 },
+  { quarter: "21.3Q", revenue: 210.4, yoy: 47.0 },
+  { quarter: "21.4Q", revenue: 184.6, yoy: 30.4 },
+  { quarter: "22.1Q", revenue: 283.5, yoy: 59.7 },
+  { quarter: "22.2Q", revenue: 330.0, yoy: 54.9 },
+  { quarter: "22.3Q", revenue: 333.0, yoy: 58.3 },
+  { quarter: "22.4Q", revenue: 352.1, yoy: 90.7 },
+  { quarter: "23.1Q", revenue: 397.7, yoy: 40.3 },
+  { quarter: "23.2Q", revenue: 420.5, yoy: 27.4 },
+  { quarter: "23.3Q", revenue: 424.0, yoy: 27.3 },
+  { quarter: "23.4Q", revenue: 429.3, yoy: 21.9 },
+  { quarter: "24.1Q", revenue: 533.0, yoy: 34.0 },
+  { quarter: "24.2Q", revenue: 545.2, yoy: 29.7 },
+  { quarter: "24.3Q", revenue: 570.9, yoy: 34.6 },
+  { quarter: "24.4Q", revenue: 530.9, yoy: 23.7 },
+  { quarter: "25.1Q", revenue: 586.1, yoy: 10.0 },
 ];
 
-// DECK stock price + Google Trends + HOKA revenue YoY
+// DECK stock price (post-split adjusted) + Google Trends ("Hoka", US) + HOKA revenue YoY
 const stockTrendData = [
-  { quarter: "20.1Q", stock: 22, googleTrend: 18, revenueYoy: null },
-  { quarter: "20.2Q", stock: 33, googleTrend: 22, revenueYoy: null },
-  { quarter: "20.3Q", stock: 37, googleTrend: 28, revenueYoy: null },
-  { quarter: "20.4Q", stock: 48, googleTrend: 32, revenueYoy: null },
-  { quarter: "21.1Q", stock: 55, googleTrend: 38, revenueYoy: 62 },
-  { quarter: "21.2Q", stock: 64, googleTrend: 45, revenueYoy: 96 },
-  { quarter: "21.3Q", stock: 60, googleTrend: 52, revenueYoy: 47 },
-  { quarter: "21.4Q", stock: 61, googleTrend: 55, revenueYoy: 30 },
-  { quarter: "22.1Q", stock: 46, googleTrend: 60, revenueYoy: 56 },
-  { quarter: "22.2Q", stock: 43, googleTrend: 68, revenueYoy: 55 },
-  { quarter: "22.3Q", stock: 52, googleTrend: 78, revenueYoy: 59 },
-  { quarter: "22.4Q", stock: 67, googleTrend: 88, revenueYoy: 91 },
-  { quarter: "23.1Q", stock: 75, googleTrend: 92, revenueYoy: 40 },
-  { quarter: "23.2Q", stock: 88, googleTrend: 95, revenueYoy: 28 },
-  { quarter: "23.3Q", stock: 86, googleTrend: 100, revenueYoy: 28 },
-  { quarter: "23.4Q", stock: 111, googleTrend: 97, revenueYoy: 22 },
-  { quarter: "24.1Q", stock: 157, googleTrend: 90, revenueYoy: 34 },
-  { quarter: "24.2Q", stock: 161, googleTrend: 88, revenueYoy: 30 },
-  { quarter: "24.3Q", stock: 159, googleTrend: 85, revenueYoy: 35 },
-  { quarter: "24.4Q", stock: 203, googleTrend: 82, revenueYoy: 24 },
-  { quarter: "25.1Q", stock: 112, googleTrend: 78, revenueYoy: 10 },
+  { quarter: "20.1Q", stock: 28, googleTrend: 17, revenueYoy: null },
+  { quarter: "20.2Q", stock: 28, googleTrend: 21, revenueYoy: null },
+  { quarter: "20.3Q", stock: 35, googleTrend: 21, revenueYoy: null },
+  { quarter: "20.4Q", stock: 44, googleTrend: 20, revenueYoy: null },
+  { quarter: "21.1Q", stock: 53, googleTrend: 25, revenueYoy: null },
+  { quarter: "21.2Q", stock: 56, googleTrend: 33, revenueYoy: 96 },
+  { quarter: "21.3Q", stock: 68, googleTrend: 36, revenueYoy: 47 },
+  { quarter: "21.4Q", stock: 65, googleTrend: 38, revenueYoy: 30 },
+  { quarter: "22.1Q", stock: 50, googleTrend: 46, revenueYoy: 60 },
+  { quarter: "22.2Q", stock: 44, googleTrend: 57, revenueYoy: 55 },
+  { quarter: "22.3Q", stock: 52, googleTrend: 65, revenueYoy: 58 },
+  { quarter: "22.4Q", stock: 61, googleTrend: 60, revenueYoy: 91 },
+  { quarter: "23.1Q", stock: 70, googleTrend: 74, revenueYoy: 40 },
+  { quarter: "23.2Q", stock: 80, googleTrend: 92, revenueYoy: 27 },
+  { quarter: "23.3Q", stock: 89, googleTrend: 91, revenueYoy: 27 },
+  { quarter: "23.4Q", stock: 102, googleTrend: 85, revenueYoy: 22 },
+  { quarter: "24.1Q", stock: 139, googleTrend: 85, revenueYoy: 34 },
+  { quarter: "24.2Q", stock: 153, googleTrend: 95, revenueYoy: 30 },
+  { quarter: "24.3Q", stock: 154, googleTrend: 90, revenueYoy: 35 },
+  { quarter: "24.4Q", stock: 181, googleTrend: 85, revenueYoy: 24 },
+  { quarter: "25.1Q", stock: 162, googleTrend: 76, revenueYoy: 10 },
 ];
 
 export function HokaRevenueChart() {
   return (
     <div className="my-8">
       <h3 className="text-base font-semibold text-zinc-800 mb-1">
-        HOKA Wholesale · D2C Revenue ($m)
+        HOKA Quarterly Revenue ($M)
       </h3>
       <p className="text-xs text-zinc-400 mb-4">
-        Deckers Outdoor 분기별 HOKA 브랜드 매출 추정 (Wholesale / D2C 채널별)
+        Deckers Outdoor 분기별 HOKA 브랜드 총 매출 및 YoY 성장률
       </p>
       <div className="bg-white rounded-xl border border-zinc-200 p-4">
-        <ResponsiveContainer width="100%" height={380}>
+        <ResponsiveContainer width="100%" height={400}>
           <ComposedChart
             data={revenueData}
-            margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+            margin={{ top: 10, right: 50, left: 10, bottom: 30 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis
@@ -92,7 +87,7 @@ export function HokaRevenueChart() {
               interval={0}
               angle={-45}
               textAnchor="end"
-              height={50}
+              height={55}
             />
             <YAxis
               yAxisId="left"
@@ -100,9 +95,10 @@ export function HokaRevenueChart() {
               tickLine={false}
               axisLine={false}
               label={{
-                value: "$m",
+                value: "$M",
                 angle: -90,
                 position: "insideLeft",
+                offset: 0,
                 style: { fontSize: 11, fill: "#999" },
               }}
             />
@@ -113,7 +109,14 @@ export function HokaRevenueChart() {
               tickLine={false}
               axisLine={false}
               tickFormatter={(v: number) => `${v}%`}
-              domain={[0, 120]}
+              domain={[0, 100]}
+              label={{
+                value: "YoY %",
+                angle: 90,
+                position: "insideRight",
+                offset: 5,
+                style: { fontSize: 11, fill: "#999" },
+              }}
             />
             <Tooltip
               contentStyle={{
@@ -122,42 +125,24 @@ export function HokaRevenueChart() {
                 border: "1px solid #e5e7eb",
               }}
               formatter={(value, name) => {
-                if (String(name).includes("yoy") || String(name).includes("YoY"))
+                if (String(name).includes("YoY"))
                   return [`${value}%`, String(name)];
-                return [`$${value}m`, String(name)];
+                return [`$${value}M`, String(name)];
               }}
             />
-            <Legend wrapperStyle={{ fontSize: 11 }} />
+            <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
             <Bar
               yAxisId="left"
-              dataKey="wholesale"
+              dataKey="revenue"
               fill="#1e3a5f"
-              name="Wholesale"
-              stackId="revenue"
-              radius={[0, 0, 0, 0]}
-            />
-            <Bar
-              yAxisId="left"
-              dataKey="d2c"
-              fill="#60a5fa"
-              name="D2C"
-              stackId="revenue"
-              radius={[2, 2, 0, 0]}
+              name="HOKA Revenue"
+              radius={[3, 3, 0, 0]}
             />
             <Line
               yAxisId="right"
-              dataKey="wholesaleYoy"
+              dataKey="yoy"
               stroke="#f97316"
-              name="Wholesale YoY"
-              strokeWidth={2}
-              dot={{ r: 2.5 }}
-              connectNulls
-            />
-            <Line
-              yAxisId="right"
-              dataKey="d2cYoy"
-              stroke="#22c55e"
-              name="D2C YoY"
+              name="Revenue YoY"
               strokeWidth={2}
               dot={{ r: 2.5 }}
               connectNulls
@@ -176,13 +161,13 @@ export function StockTrendChart() {
         DECK 주가 · 구글트렌드 · HOKA 매출 YoY
       </h3>
       <p className="text-xs text-zinc-400 mb-4">
-        구글트렌드 고점(23.3Q) → 주가 고점(24.4Q): 약 5분기 시차
+        구글트렌드 YoY 성장 둔화(23.2Q~) → 주가 고점(24.4Q): 약 5분기 시차
       </p>
       <div className="bg-white rounded-xl border border-zinc-200 p-4">
-        <ResponsiveContainer width="100%" height={380}>
+        <ResponsiveContainer width="100%" height={400}>
           <ComposedChart
             data={stockTrendData}
-            margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+            margin={{ top: 20, right: 50, left: 10, bottom: 30 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis
@@ -192,14 +177,21 @@ export function StockTrendChart() {
               interval={0}
               angle={-45}
               textAnchor="end"
-              height={50}
+              height={55}
             />
             <YAxis
               yAxisId="left"
               tick={{ fontSize: 11, fill: "#999" }}
               tickLine={false}
               axisLine={false}
-              domain={[0, 220]}
+              domain={[0, 200]}
+              label={{
+                value: "주가($) / 트렌드",
+                angle: -90,
+                position: "insideLeft",
+                offset: 0,
+                style: { fontSize: 10, fill: "#999" },
+              }}
             />
             <YAxis
               yAxisId="right"
@@ -209,6 +201,13 @@ export function StockTrendChart() {
               axisLine={false}
               tickFormatter={(v: number) => `${v}%`}
               domain={[0, 100]}
+              label={{
+                value: "YoY %",
+                angle: 90,
+                position: "insideRight",
+                offset: 5,
+                style: { fontSize: 10, fill: "#999" },
+              }}
             />
             <Tooltip
               contentStyle={{
@@ -217,12 +216,14 @@ export function StockTrendChart() {
                 border: "1px solid #e5e7eb",
               }}
               formatter={(value, name) => {
-                if (String(name).includes("YoY")) return [`${value}%`, String(name)];
-                if (String(name).includes("주가")) return [`$${value}`, String(name)];
+                if (String(name).includes("YoY"))
+                  return [`${value}%`, String(name)];
+                if (String(name).includes("주가"))
+                  return [`$${value}`, String(name)];
                 return [String(value), String(name)];
               }}
             />
-            <Legend wrapperStyle={{ fontSize: 11 }} />
+            <Legend wrapperStyle={{ fontSize: 11, paddingTop: 8 }} />
             <Area
               yAxisId="left"
               dataKey="googleTrend"
@@ -252,7 +253,7 @@ export function StockTrendChart() {
             />
             <ReferenceLine
               yAxisId="left"
-              x="23.3Q"
+              x="23.2Q"
               stroke="#3b82f6"
               strokeDasharray="3 3"
               label={{
