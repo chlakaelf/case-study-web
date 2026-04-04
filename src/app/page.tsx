@@ -160,7 +160,7 @@ export default function Home() {
           <Link
             key={cs.slug}
             href={`/cases/${cs.slug}`}
-            className="group block rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm hover:shadow-md hover:border-zinc-300 transition-all"
+            className="group flex flex-col rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm hover:shadow-md hover:border-zinc-300 transition-all"
           >
             <div className="flex flex-wrap items-center gap-2 mb-3">
               {cs.tags.map((tag) => (
@@ -176,7 +176,7 @@ export default function Home() {
               {cs.title}
             </h2>
             <p className="text-sm text-zinc-500 mb-3">{cs.subtitle}</p>
-            <div className="mt-4 text-xs text-zinc-400">{cs.date}</div>
+            <div className="mt-auto pt-4 text-xs text-zinc-400">{cs.date}</div>
           </Link>
         ))}
       </div>
